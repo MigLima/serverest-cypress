@@ -1,20 +1,6 @@
 describe("API - Produtos", () => {
   it("deve cadastrar um produto com token de administrador", () => {
-    const emailAdmin = `admin${Date.now()}@teste.com`;
-
-    cy.request("POST", "https://serverest.dev/usuarios", {
-      nome: "Admin QA",
-      email: emailAdmin,
-      password: "123456",
-      administrador: "true",
-    });
-
-    cy.request("POST", "https://serverest.dev/login", {
-      email: emailAdmin,
-      password: "123456",
-    }).then((login) => {
-      const token = login.body.authorization;
-
+    cy.obterTokenAdmin().then((token) => {
       cy.request({
         method: "POST",
         url: "https://serverest.dev/produtos",
