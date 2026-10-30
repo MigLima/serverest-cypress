@@ -40,19 +40,22 @@ Cypress.Commands.add("obterTokenAdmin", () => {
   }).then((login) => login.body.authorization);
 });
 
-Cypress.Commands.add("criarProduto", (token) => {
-  cy.request({
-    method: "POST",
-    url: "https://serverest.dev/produtos",
-    headers: { Authorization: token },
-    body: {
-      nome: `Notebook Dell ${Date.now()}`,
-      preco: 3500,
-      descricao: "Laptop Dell Windows 11 i5",
-      quantidade: 20,
-    },
-  }).then((produto) => produto.body._id);
-});
+Cypress.Commands.add(
+  "criarProduto",
+  (token, nome = `Notebook Dell ${Date.now()}`) => {
+    cy.request({
+      method: "POST",
+      url: "https://serverest.dev/produtos",
+      headers: { Authorization: token },
+      body: {
+        nome: nome,
+        preco: 3500,
+        descricao: "Laptop Dell Windows 11 i5",
+        quantidade: 20,
+      },
+    }).then((produto) => produto.body._id);
+  },
+);
 
 Cypress.Commands.add("criarCarrinho", (token, idProduto) => {
   cy.request({
