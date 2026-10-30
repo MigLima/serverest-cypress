@@ -6,17 +6,22 @@ Criado para estudo e prática de QA.
 
 ## O que é testado
 
-**E2E (interface):**
+**E2E (interface), 7 testes:**
 
-- Login com credenciais inválidas
-- Login válido como administrador
-- Cadastro de usuário administrador com sucesso
-- Cadastro com e-mail já existente
+- Login com credenciais inválidas e login válido como administrador
+- Cadastro de usuário administrador e cadastro com e-mail já existente
+- Cadastro de produto e cadastro com nome repetido
+- Usuário comum pesquisando um produto e adicionando à lista de compras
 
-**API:**
+**API, 7 testes:**
 
-- Cadastro de usuário (status 201, mensagem e `_id` na resposta)
-- Cadastro com e-mail já existente (status 400 e mensagem de erro)
+- Usuários: cadastro com sucesso (201) e e-mail duplicado (400)
+- Produtos: cadastro com token de administrador e recusa sem token (401)
+- Carrinhos: criar carrinho, concluir compra e cancelar compra, validando que o estoque é reabastecido
+
+## Limitação conhecida
+
+A tela de carrinho do ServeRest está "em construção". Por isso, o fluxo de carrinho e compra é testado apenas pela API.
 
 ## Tecnologias
 
@@ -29,9 +34,16 @@ Criado para estudo e prática de QA.
 ```
 cypress/
   e2e/
-    login.cy.js          # testes E2E de login
-    cadastro.cy.js       # testes E2E de cadastro
-    usuarios-api.cy.js   # testes de API de usuários
+    login.cy.js
+    cadastro.cy.js
+    produtos.cy.js
+    lista-compras.cy.js
+    usuarios-api.cy.js
+    produtos-api.cy.js
+    carrinhos-api.cy.js
+  support/
+    commands.js          # comandos customizados (obterTokenAdmin, criarProduto, criarCarrinho)
+    pages/               # Page Objects (LoginPage, CadastroPage, ProdutosPage, HomePage)
 cypress.config.js        # configuração (baseUrl)
 package.json
 ```
@@ -61,23 +73,22 @@ npx cypress open
 Para rodar todos os testes no terminal:
 
 ```bash
-npx cypress run
+npx cypress run --browser chrome
 ```
 
 ## Boas práticas aplicadas
 
 - Seletores estáveis com `data-testid`
-- URL base configurada em `cypress.config.js`
-- Dados dinâmicos (`Date.now()`) para evitar conflito de e-mail entre execuções
+- **Page Object** para as telas de login, cadastro, produtos e home
+- **Comandos customizados** para montar dados pela API (administrador com token, produto e carrinho)
+- Dados dinâmicos (`Date.now()`) para evitar conflito entre execuções
 - Pré-condições criadas via API (`cy.request`) para deixar os testes de interface mais rápidos e estáveis
-- Cenários positivos e negativos
+- Cenários positivos e negativos, incluindo validação de erro esperado (400 e 401)
 
 ## Próximos passos
 
-- Testes de produtos e carrinho
-- Organização com Page Object e comandos customizados
-- Relatório de execução
 - Pipeline com GitHub Actions
+- Relatório de execução
 
 ## Autor
 
