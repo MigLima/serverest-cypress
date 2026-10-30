@@ -1,10 +1,9 @@
+import loginPage from "../support/pages/LoginPage";
+
 describe("Login", () => {
   it("deve exibir erro com credenciais inválidas", () => {
-    cy.visit("/login");
-
-    cy.get('[data-testid="email"]').type("naoexiste@teste.com");
-    cy.get('[data-testid="senha"]').type("senhaerrada");
-    cy.get('[data-testid="entrar"]').click();
+    loginPage.visitar();
+    loginPage.fazerLogin("naoexiste@teste.com", "senhaerrada");
 
     cy.contains("Email e/ou senha inválidos").should("be.visible");
   });
@@ -19,10 +18,8 @@ describe("Login", () => {
       administrador: "true",
     });
 
-    cy.visit("/login");
-    cy.get('[data-testid="email"]').type(email);
-    cy.get('[data-testid="senha"]').type("123456");
-    cy.get('[data-testid="entrar"]').click();
+    loginPage.visitar();
+    loginPage.fazerLogin(email, "123456");
 
     cy.url().should("include", "/admin/home");
   });
