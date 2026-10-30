@@ -1,15 +1,11 @@
+import cadastroPage from "../support/pages/CadastroPage";
+
 describe("Cadastro", () => {
   it("deve cadastrar um usuário administrador com sucesso", () => {
     const email = `qa${Date.now()}@teste.com`;
 
-    cy.visit("/login");
-    cy.contains("Cadastre-se").click();
-
-    cy.get('[data-testid="nome"]').type("Usuario QA");
-    cy.get('[data-testid="email"]').type(email);
-    cy.get('[data-testid="password"]').type("123456");
-    cy.get('[data-testid="checkbox"]').check();
-    cy.get('[data-testid="cadastrar"]').click();
+    cadastroPage.visitar();
+    cadastroPage.cadastrar("Usuario QA", email, "123456", true);
 
     cy.contains("Cadastro realizado com sucesso").should("be.visible");
   });
@@ -24,13 +20,8 @@ describe("Cadastro", () => {
       administrador: "true",
     });
 
-    cy.visit("/login");
-    cy.contains("Cadastre-se").click();
-
-    cy.get('[data-testid="nome"]').type("Outro Usuario");
-    cy.get('[data-testid="email"]').type(email);
-    cy.get('[data-testid="password"]').type("123456");
-    cy.get('[data-testid="cadastrar"]').click();
+    cadastroPage.visitar();
+    cadastroPage.cadastrar("Outro Usuario", email, "123456");
 
     cy.contains("Este email já está sendo usado").should("be.visible");
   });
